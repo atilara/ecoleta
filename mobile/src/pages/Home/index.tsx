@@ -3,6 +3,7 @@ import { Feather as Icon } from '@expo/vector-icons'
 import { View, ImageBackground, Text, Image, StyleSheet } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';	
 import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants';
 
 const Home = () => {
 	const navigation = useNavigation();
@@ -41,6 +42,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 32,
 		backgroundColor: '#f0f0f5',
+		paddingTop: 20 + Constants.statusBarHeight,
 	},
 
 	main: {
