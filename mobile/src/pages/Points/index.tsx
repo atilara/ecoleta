@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -6,11 +6,27 @@ import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView } from 'rea
 import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg';
 
-const Points = () => {
+import api from '../../services/api';
 
+interface Item {
+	id: number;
+	title: string;
+	image_url: string;
+} 	
+
+const Points = () => {
 	// "instância"
 	const navigation = useNavigation();
+	const [items, setItems] = useState<Item[]>([]);
+	const [selectedItems, setSelectedItems] = useState<number[]>([])
 
+	useEffect (() => {
+		api.get('items').then(response => {
+			setItems(response.data);
+		});
+	}, []);
+	
+	
 	// faz o usuário voltar a tela anterior quando o botão é clidado
 	function handleNavigateBack() {
 		navigation.goBack();
@@ -19,6 +35,19 @@ const Points = () => {
 	function handleNavigateToDetail() {
 		navigation.navigate('Detail');
 	}
+
+	function handleSelectItem(id: number) {
+        const alreadySelected = selectedItems.findIndex(item => item === id);
+
+        if (alreadySelected >= 0) {
+            // contém todos os items menos aquele que foi removido, se o id for igual, ele será removido 
+            const filteredItems = selectedItems.filter(item => item !== id);
+            setSelectedItems(filteredItems);
+        } else {
+            setSelectedItems([ ...selectedItems, id ]);
+        }
+        
+    }
 	
 	// as duas chaves em alguns componentes {{}} representam que aquilo é um código js e objeto
 	
@@ -70,34 +99,25 @@ const Points = () => {
 						paddingHorizontal: 20
 					}}
 				>
-					<TouchableOpacity style={styles.item} onPress={() => {}}>
-						<SvgUri 
-							width={42} 
-							height={42} 
-							uri="http://192.168.15.2:3333/uploads/lampadas.svg" 
-						/>
-						<Text style={styles.itemTitle}>Lâmpadas</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.item} onPress={() => {}}>
-						<SvgUri width={42} height={42} uri="http://192.168.15.2:3333/uploads/lampadas.svg" />
-						<Text style={styles.itemTitle}>Lâmpadas</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.item} onPress={() => {}}>
-						<SvgUri width={42} height={42} uri="http://192.168.15.2:3333/uploads/lampadas.svg" />
-						<Text style={styles.itemTitle}>Lâmpadas</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.item} onPress={() => {}}>
-						<SvgUri width={42} height={42} uri="http://192.168.15.2:3333/uploads/lampadas.svg" />
-						<Text style={styles.itemTitle}>Lâmpadas</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.item} onPress={() => {}}>
-						<SvgUri width={42} height={42} uri="http://192.168.15.2:3333/uploads/lampadas.svg" />
-						<Text style={styles.itemTitle}>Lâmpadas</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.item} onPress={() => {}}>
-						<SvgUri width={42} height={42} uri="http://192.168.15.2:3333/uploads/lampadas.svg" />
-						<Text style={styles.itemTitle}>Lâmpadas</Text>
-					</TouchableOpacity>
+					{items.map(item => (
+						<TouchableOpacity 
+							key={String(item.id)} 
+							style={[
+								styles.item, 
+								selectedItems.includes(item.id) ? styles.selectedItem : {}
+							]} 
+							activeOpacity={0.6}
+							onPress={() => handleSelectItem(item.id)}
+						>
+							<SvgUri 
+								width={42} 
+								height={42} 
+								uri={item.image_url} 
+							/>
+							<Text style={styles.itemTitle}>{item.title}</Text>
+						</TouchableOpacity>
+					))}
+					
 				</ScrollView>
 			</View>
 		</>
