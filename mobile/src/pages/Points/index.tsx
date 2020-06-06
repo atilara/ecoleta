@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -23,6 +23,11 @@ interface Point {
 	longitude: number;
 }
 
+interface Params {
+	uf: string;
+	city: string;
+}
+
 const Points = () => {
 	// "instância"
 	const navigation = useNavigation();
@@ -32,6 +37,9 @@ const Points = () => {
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	
 	const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
+	const route = useRoute();
+
+	const routeParams = route.params as Params;
 	
 	useEffect(() => {
 		// carregar a posição do usuário, pedindo permissão
@@ -65,14 +73,14 @@ const Points = () => {
 	useEffect (() => {
 		api.get('points', {
 			params: {
-				city: 'Recife',
-				uf: 'PE',
-				items: [1, 2, 6]
+				city: routeParams.city,
+				uf: routeParams.uf,
+				items: selectedItems
 			}
 		}).then(response => {
 			setPoints(response.data);
 		});
-	}, []);
+	}, [selectedItems]);
 	
 	// faz o usuário voltar a tela anterior quando o botão é clidado
 	function handleNavigateBack() {
