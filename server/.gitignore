@@ -114,3 +114,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+#uploads
+uploads/*
+!uploads/.gitkeep
+
+# sqlite
+*.sqlite

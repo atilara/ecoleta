@@ -7,6 +7,7 @@ import axios from 'axios';
 import api from '../../services/api';
 
 import './styles.css';
+import Dropzone from '../../components/Dropzone';
 
 import logo from '../../assets/logo.svg';
 
@@ -45,6 +46,7 @@ const CreatePoint = () => {
     const [selectedCity, setSelectedCity] = useState('0');
     // armazenará um array com dois números (latitude e longitude)
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
+    const [selectedFile, setSelectedFile] = useState<File>();
     // armazenará um array de números (id dos items selecionados)
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     // o UseHistory permite navegar de uma rota a outra sem precisar de botão, link, etc
@@ -139,17 +141,21 @@ const CreatePoint = () => {
         const city = selectedCity;
         const [latitude, longitude] = selectedPosition;
         const items = selectedItems;
+        
+        const data = new FormData();
+        
+        data.append('name', name);
+        data.append('email', email);
+        data.append('whatsapp', whatsapp);
+        data.append('uf', uf);
+        data.append('city', city);
+        data.append('latitude', String(latitude));
+        data.append('longitude', String(longitude));
+        data.append('items', items.join(','));
 
-        const data = {
-            name,
-            email,
-            whatsapp,
-            uf,
-            city,
-            latitude,
-            longitude,
-            items
-        }
+        if (selectedFile) {
+            data.append('image', selectedFile);
+        }  
 
         await api.post('points', data);
 
@@ -170,6 +176,9 @@ const CreatePoint = () => {
             </header>
             <form onSubmit={handleSubmit}>
                 <h1>Cadastro do <br/> ponto de coleta</h1>
+                <Dropzone 
+                    onFileUploaded={setSelectedFile}
+                />
                 <fieldset>
                     <legend>
                         <h2>Dados</h2>
