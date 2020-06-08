@@ -20,8 +20,8 @@ Interface Web, onde os pontos de coleta podem ser cadastrados.
 ### 📱 Mobile
 Interface Mobile, onde os pontos podem ser visualizados no mapa, filtrados e detalhados.
 <div align="left">
-    <img src=".github/Mobile-Início.png" alt="Interface mobile" width="20%" height="20%" />
-    <img src=".github/Mobile-Home.png" alt="Interface mobile" width="20%" height="20%" />
+    <img src=".github/Mobile-Início.png" alt="Interface mobile" width="30%" height="30%" />
+    <img src=".github/Mobile-Home.png" alt="Interface mobile" width="30%" height="30%" />
 </div>
 
 ### 👨‍💻 Como utilizar

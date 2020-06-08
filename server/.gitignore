@@ -117,7 +117,7 @@ dist
 
 #uploads
 uploads/*
-!uploads/.gitkeep
+!uploads/*.svg
 
 # sqlite
 *.sqlite
